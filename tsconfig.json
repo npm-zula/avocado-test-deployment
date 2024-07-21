@@ -26,7 +26,7 @@
     "strictPropertyInitialization": false,
     "strictBindCallApply": false,
     "noImplicitThis": false,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
 
     "baseUrl": ".",
     "paths": {
