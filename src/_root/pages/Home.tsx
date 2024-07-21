@@ -63,10 +63,10 @@ const Home = () => {
   //   !shouldShowSearchResults &&
   //   posts.pages.every((item) => item.documents.length === 0);\
 
-  const [postCreated, setPostCreated] = useState(false);
+  const [postCount, setPostCount] = useState(0);
 
   const handlePostCreated = React.useCallback(() => {
-    setPostCreated((prev) => !prev);
+    setPostCount((prev) => prev + 1);
   }, []);
 
   return (
@@ -79,7 +79,7 @@ const Home = () => {
         <div className="left_wide_col">
           <CreatePost onPostCreated={handlePostCreated} />
           <div className="">
-            <Posts key={postCreated} />
+            <Posts key={postCount} />
           </div>
         </div>
         {/* left_wide_col end*/}

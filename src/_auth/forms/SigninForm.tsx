@@ -2,6 +2,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 
 import {
   Form,
@@ -18,16 +19,18 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { SigninValidation } from "@/lib/validation";
 // import { useSignInAccount } from "@/lib/react-query/queries";
-import { useSignInAccount } from "@/lib/react-query/supabase-queries";
+// import { useSignInAccount } from "@/lib/react-query/supabase-queries";
+import { signInAccount } from "@/lib/supabase/api/userAuth";
 import { useUserContext } from "@/context/AuthContext";
 
 const SigninForm = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
 
   // Query
-  const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
+  // const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
@@ -38,7 +41,10 @@ const SigninForm = () => {
   });
 
   const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
-    const session = await signInAccount(user);
+    const email = user.email;
+    const password = user.password;
+
+    const session = await signInAccount({ email, password });
 
     console.log(session);
 

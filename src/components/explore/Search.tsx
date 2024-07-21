@@ -30,73 +30,12 @@ type Post = {
 type Account = {
   username: string;
   bio: string;
-  ImageURL: string;
+  imageURL: string;
 };
 
 const Search = () => {
   const [searchInput, setSearchInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-
-  const tempUserData = [
-    {
-      username: "John Doe",
-      bio: "This is a bio",
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      username: "Jane Doe",
-      bio: "This is a bio",
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      username: "John Doe",
-      bio: "This is a bio",
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      username: "Jane Doe",
-      bio: "This is a bio",
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      username: "Jane Doe",
-      bio: "This is a bio",
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-  ];
-
-  const tempPostData = [
-    {
-      caption: "This is a caption",
-      likeCount: 10,
-      commentCount: 5,
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      caption: "This is a caption",
-      likeCount: 10,
-      commentCount: 5,
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      caption: "This is a caption",
-      likeCount: 10,
-      commentCount: 5,
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      caption: "This is a caption",
-      likeCount: 10,
-      commentCount: 5,
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-    {
-      caption: "This is a caption",
-      likeCount: 10,
-      commentCount: 5,
-      ImageURL: "/assets/explorer/sideProfile.png",
-    },
-  ];
 
   const [postIsActive, setPostIsActive] = React.useState(true);
   const [accountIsActive, setAccountIsActive] = React.useState(false);
@@ -256,7 +195,7 @@ const Search = () => {
                               key={index}
                               username={account.username}
                               bio={account.bio}
-                              ImageURL={account.ImageURL}
+                              ImageURL={account.imageURL}
                             />
                           );
                         })

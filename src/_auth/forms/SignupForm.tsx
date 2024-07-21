@@ -23,21 +23,25 @@ import { postTags } from "@/constants";
 //   useSignInAccount,
 // } from "@/lib/react-query/queries";
 
-import {
-  useCreateUserAccount,
-  useSignInAccount,
-} from "@/lib/react-query/supabase-queries";
+// import {
+//   useCreateUserAccount,
+//   useSignInAccount,
+// } from "@/lib/react-query/supabase-queries";
+
+import { createUserAccount, signInAccount } from "@/lib/supabase/api/userAuth";
 
 import { addUserTags } from "@/lib/supabase/api/tags";
 
 import { SignupValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
-import { IUser } from "@/types";
+import { INewUser, IUser } from "@/types";
 
 const SignupForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const [isCreatingAccount, setIsCreatingAccount] = React.useState(false);
+  const [isSigningInUser, setIsSigningInUser] = React.useState(false);
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -54,16 +58,23 @@ const SignupForm = () => {
     []
   );
 
-  // Queries
-  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } =
-    useCreateUserAccount();
-  const { mutateAsync: signInAccount, isLoading: isSigningInUser } =
-    useSignInAccount();
+  // // Queries
+  // const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } =
+  //   useCreateUserAccount();
+  // const { mutateAsync: signInAccount, isLoading: isSigningInUser } =
+  //   useSignInAccount();
 
   // Handler
   const handleSignup = async (user: z.infer<typeof SignupValidation>) => {
     try {
-      const newUser = (await createUserAccount(user)) as IUser[];
+      const tempUser: INewUser = {
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      };
+
+      const newUser = (await createUserAccount(tempUser)) as IUser[];
 
       const userID = newUser[0].id;
 

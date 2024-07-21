@@ -49,14 +49,23 @@ export async function getUserTags() {
         console.error('Error getting user tags: ', error.message)
     }
 
-    let tags: { value: string, label: string }[] = [];
+    let tags: any[] = [];
 
-    if (user_tags) {
-        tags = user_tags.map(item => ({
-            value: item.tags.id,
-            label: item.tags.tag_name
-        }));
-    }
+    // if (user_tags) {
+    //     tags = user_tags.map(item => ({
+    //         value: item.tags.id,
+    //         label: item.tags.tag_name
+    //     }));
+    // }
+
+    tags = user_tags.map((item: any) => ({
+        value: item.tags.id,
+        label: item.tags.tag_name
+    }))
+
+    console.log("tags", tags)
+
+    // console.log("user_tags", user_tags)
 
     // console.log("tags", tags[0])
 

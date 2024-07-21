@@ -134,12 +134,14 @@ export async function getInfinitePosts(pageParam: number, tag: string, filter: s
             throw error; // Rethrow the error to handle it outside this function if needed
         }
 
-        return data;
+        let formattedData: any = data;
+
+        return formattedData;
     }
 
     const { data, error } = await supabase
         .from('posts')
-        .select(`caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
+        .select(`id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
         ,
         user_profiles (
             id,
@@ -160,7 +162,9 @@ export async function getInfinitePosts(pageParam: number, tag: string, filter: s
         throw error; // Rethrow the error to handle it outside this function if needed
     }
 
-    return data;
+    let formattedData: any = data;
+
+    return formattedData;
 }
 
 
@@ -200,68 +204,68 @@ export async function getPostById(postId?: string) {
 }
 
 
-// ============================== UPDATE POST
-export async function updatePost(post: IUpdatePost) {
-    const hasFileToUpdate = post.file.length > 0;
+// // ============================== UPDATE POST
+// export async function updatePost(post: IUpdatePost) {
+//     const hasFileToUpdate = post.file.length > 0;
 
-    try {
-        let image = {
-            imageUrl: post.imageUrl,
-            imageId: post.imageId,
-        };
+//     try {
+//         let image = {
+//             imageUrl: post.imageUrl,
+//             imageId: post.imageId,
+//         };
 
-        if (hasFileToUpdate) {
-            // Upload new file to Supabase storage
-            const uploadedFile = await uploadFile(post.file[0]);
-            if (!uploadedFile) throw new Error('Failed to upload file');
+//         if (hasFileToUpdate) {
+//             // Upload new file to Supabase storage
+//             const uploadedFile = await uploadFile(post.file[0]);
+//             if (!uploadedFile) throw new Error('Failed to upload file');
 
-            // Get new file URL
-            const file_url = await getFileUrl(uploadedFile.path);
+//             // Get new file URL
+//             const file_url = await getFileUrl(uploadedFile.path);
 
-            if (!file_url) {
-                await deleteFile(uploadedFile.path);
-                throw new Error('Failed to get file URL');
-            }
+//             if (!file_url) {
+//                 await deleteFile(uploadedFile.path);
+//                 throw new Error('Failed to get file URL');
+//             }
 
-            image = { ...image, imageUrl: file_url, imageId: uploadedFile.path };
-        }
+//             image = { ...image, imageUrl: file_url, imageId: uploadedFile.path };
+//         }
 
-        // Convert tags into array
-        const tags = post.tags?.replace(/ /g, "").split(",") || [];
+//         // Convert tags into array
+//         const tags = post.tags?.replace(/ /g, "").split(",") || [];
 
-        // Update post in Supabase
-        const { data: updatedPost, error } = await supabase
-            .from('posts')
-            .update({
-                caption: post.caption,
-                imageUrl: image.imageUrl,
-                imageId: image.imageId,
-                location: post.location,
-                tags: tags,
-            })
-            .eq('id', post.postId);
+//         // Update post in Supabase
+//         const { data: updatedPost, error } = await supabase
+//             .from('posts')
+//             .update({
+//                 caption: post.caption,
+//                 imageUrl: image.imageUrl,
+//                 imageId: image.imageId,
+//                 location: post.location,
+//                 tags: tags,
+//             })
+//             .eq('id', post.postId);
 
-        if (error || !updatedPost) {
-            // Delete new file that has been recently uploaded
-            if (hasFileToUpdate) {
+//         if (error || !updatedPost) {
+//             // Delete new file that has been recently uploaded
+//             if (hasFileToUpdate) {
 
-                await deleteFile(image.imageId);
-            }
+//                 await deleteFile(image.imageId);
+//             }
 
-            throw new Error('Failed to update post');
-        }
+//             throw new Error('Failed to update post');
+//         }
 
-        // Safely delete old file after successful update
-        if (hasFileToUpdate) {
-            await deleteFile(post.imageId);
-        }
+//         // Safely delete old file after successful update
+//         if (hasFileToUpdate) {
+//             await deleteFile(post.imageId);
+//         }
 
-        return updatedPost;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+//         return updatedPost;
+//     } catch (error) {
+//         console.log(error);
+//         throw error;
+//     }
+// }
 
 // ============================== DELETE POST
 export async function deletePost(postId?: string, imageId?: string) {

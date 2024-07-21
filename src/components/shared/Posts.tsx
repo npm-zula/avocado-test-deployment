@@ -21,7 +21,7 @@ type CardProps = {
     id: any;
     username: any;
     name: any;
-  }[];
+  };
   created_at: any;
   comments: any;
 };
@@ -46,11 +46,13 @@ const Posts = () => {
   const fetchPosts = async (pageParam: number, tag: string, filter: string) => {
     setIsLoading(true);
     let res: CardProps[] = await getInfinitePosts(pageParam, tag, filter);
+
     setPosts((prevPosts) => {
       // If it's the first page and we already have posts, don't add duplicates
       if (pageParam === 0 && prevPosts.length > 0) {
         return prevPosts;
       }
+
       // Otherwise, append new posts
       return [...prevPosts, ...res];
     });

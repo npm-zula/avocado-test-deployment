@@ -10,7 +10,6 @@ import {
   downvotePost,
   commentOnPost,
 } from "@/lib/supabase/api/posts";
-import { set } from "react-hook-form";
 
 type CardProps = {
   id: any;
@@ -23,7 +22,7 @@ type CardProps = {
     id: any;
     username: any;
     name: any;
-  }[];
+  };
   comments: any;
 };
 
@@ -34,6 +33,8 @@ const Card = (post: CardProps) => {
   const [downvotes, setDownvotes] = useState(post.downvotes);
   const [upvoted, setUpvoted] = useState(upvotes?.includes(user?.id));
   const [downvoted, setDownvoted] = useState(downvotes?.includes(user?.id));
+
+  const [userData, setUserData] = useState<any>(null);
 
   // upvotes/downvotes
 
@@ -221,7 +222,7 @@ const Card = (post: CardProps) => {
               {upvotes?.length} Upvotes
             </p>
             <p className="sm:text-[14px] text-[12px] mt-1 font-semibold">
-              {post.user_profiles.name} - {post.caption}
+              {post.user_profiles.name || ""} - {post.caption}
             </p>
 
             {commentsList?.length > 0 && (
