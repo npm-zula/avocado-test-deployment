@@ -274,7 +274,7 @@ const Card = (post: CardProps) => {
                   height={20}
                   src="/assets/explorer/send-2.svg"
                   style={{ objectFit: "cover" }}
-                  // onClick={handleSend}
+                  onClick={handleCreateComment}
                 />
               </button>
             </div>

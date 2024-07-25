@@ -57,6 +57,15 @@ export async function createPost(post: INewPost, postType: number) {
         console.error('Error creating post: ', error.message)
     }
 
+
+    // increment the guac number of the user_profile
+    await supabase.rpc('update_guac',
+        {
+            row_id: post.userId,
+        }
+    )
+
+
     return data
 }
 
