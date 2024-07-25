@@ -28,7 +28,7 @@ type CardProps = {
 
 const Posts = () => {
   const [posts, setPosts] = React.useState<CardProps[]>([]);
-  const [activeFilter, setActiveFilter] = React.useState("Most Upvoted");
+  const [activeFilter, setActiveFilter] = React.useState("");
   const [pageParam, setPageParam] = React.useState(0);
 
   const [allTags, setAllTags] = React.useState<
@@ -143,7 +143,7 @@ const Posts = () => {
   // }, [pageParam]);
 
   return (
-    <div className="w-full">
+    <div className="w-full" id="post_div">
       <div className="post_category_wrap mt-6 my-3">
         {filters?.map((item, index) => {
           return (

@@ -114,61 +114,118 @@ export async function deleteFile(file_path: string) {
 }
 
 
-// ============================== GET POSTS
+// // ============================== GET POSTS
+// export async function getInfinitePosts(pageParam: number, tag: string, filter: string) {
+//     const pageSize = 3;
+
+//     console.log(pageParam, tag, filter);
+
+
+
+
+
+
+//     if (tag === 'All') {
+//         const { data, error } = await supabase
+//             .from('posts')
+//             .select(`id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
+//         ,
+//         user_profiles (
+//             id,
+//             username,
+//             name
+//         )
+//          `)
+//             .order('created_at', { ascending: false })
+//             .range(pageParam * pageSize, (pageParam + 1) * pageSize - 1); // Adjusted range for pagination
+
+//         //             .order('upvotes', { ascending: filter === 'Most Downvoted' })
+
+
+//         if (error) {
+//             // Handle error
+//             console.error('Error getting posts: ', error.message);
+//             throw error; // Rethrow the error to handle it outside this function if needed
+//         }
+
+//         let formattedData: any = data;
+
+//         return formattedData;
+//     }
+
+//     const { data, error } = await supabase
+//         .from('posts')
+//         .select(`id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
+//         ,
+//         user_profiles (
+//             id,
+//             username,
+//             name
+//         )
+//          `)
+//         .textSearch("tags", `${tag}`, {
+//             config: "english",
+//         })
+//         .order('created_at', { ascending: false })
+//         .range(pageParam * pageSize, (pageParam + 1) * pageSize - 1); // Adjusted range for pagination
+
+//     if (error) {
+//         // Handle error
+//         console.error('Error getting posts: ', error.message);
+//         throw error; // Rethrow the error to handle it outside this function if needed
+//     }
+
+//     //         .order('upvotes', { ascending: filter === 'Most Downvoted' })
+
+
+//     let formattedData: any = data;
+
+//     return formattedData;
+// }
+
 export async function getInfinitePosts(pageParam: number, tag: string, filter: string) {
     const pageSize = 3;
+    console.log(pageParam, tag, filter);
 
-    // console.log(pageParam, filter, tag);
+    let query = supabase
+        .from('posts')
+        .select(`
+            id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments,
+            user_profiles (
+                id,
+                username,
+                name
+            )
+        `);
 
-    // Adjust the range to start from pageParam * pageSize to (pageParam + 1) * pageSize - 1
-
-    if (tag === 'All') {
-        const { data, error } = await supabase
-            .from('posts')
-            .select(`id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
-        ,
-        user_profiles (
-            id,
-            username,
-            name
-        )
-         `)
-            .order('upvotes', { ascending: filter === 'Most Downvoted' })
-            .order('created_at', { ascending: false })
-            .range(pageParam * pageSize, (pageParam + 1) * pageSize - 1); // Adjusted range for pagination
-
-        if (error) {
-            // Handle error
-            console.error('Error getting posts: ', error.message);
-            throw error; // Rethrow the error to handle it outside this function if needed
-        }
-
-        let formattedData: any = data;
-
-        return formattedData;
+    // Apply tag filter if not 'All'
+    if (tag !== 'All') {
+        query = query.textSearch("tags", `${tag}`, {
+            config: "english",
+        });
     }
 
-    const { data, error } = await supabase
-        .from('posts')
-        .select(`id, caption, created_at, imageId, imageUrl, upvotes, downvotes, comments
-        ,
-        user_profiles (
-            id,
-            username,
-            name
-        )
-         `)
-        .textSearch("tags", `${tag}`, {
-            config: "english",
-        })
-        .order('upvotes', { ascending: filter === 'Most Downvoted' })
-        .order('created_at', { ascending: false })
-        .range(pageParam * pageSize, (pageParam + 1) * pageSize - 1); // Adjusted range for pagination
+    // Apply sorting based on filter
+    switch (filter) {
+        case 'Most Upvoted':
+            query = query.order('upvote_count', { ascending: false, nullsFirst: false });
+            console.log('most upvoted');
+            break;
+        case 'Most Downvoted':
+            query = query.order('downvote_count', { ascending: false, nullsFirst: false });
+            break;
+        default:
+            query = query.order('created_at', { ascending: false });
+    }
+
+    // Apply pagination
+    query = query.range(pageParam * pageSize, (pageParam + 1) * pageSize - 1);
+
+    const { data, error } = await query;
 
     if (error) {
-        // Handle error
         console.error('Error getting posts: ', error.message);
-        throw error; // Rethrow the error to handle it outside this function if needed
+        throw error;
     }
 
     let formattedData: any = data;
@@ -409,7 +466,10 @@ export async function upvotePost(upvotes: string[], postId: string) {
 
     const { data, error } = await supabase
         .from('posts')
-        .update({ upvotes: upvotes })
+        .update({
+            upvotes: upvotes,
+            upvote_count: upvotes.length
+        })
         .eq('id', postId);
 
     if (error) {
@@ -430,7 +490,11 @@ export async function downvotePost(downvotes: string[], postId: string) {
 
     const { data, error } = await supabase
         .from('posts')
-        .update({ downvotes: downvotes })
+        .update({
+            downvotes: downvotes,
+            downvote_count: downvotes.length
+
+        })
         .eq('id', postId);
 
     if (error) {
@@ -438,6 +502,9 @@ export async function downvotePost(downvotes: string[], postId: string) {
         console.error('Error downvoting post: ', error.message);
         throw error;
     }
+
+
+
 
     return data;
 
@@ -456,23 +523,6 @@ export async function commentOnPost(postId: string, comments: {
 
     console.log(comments, postId);
 
-    // created_at: new Date().toISOString(),
-
-    // const { data, error } = await supabase
-    //     .from('posts')
-    //     .update({
-    //         comments: {
-    //             text: comment,
-    //             user: user,
-    //             created_at: new Date().toISOString(),
-    //         }
-    //     })
-    //     .eq('id', postId);
-
-    // if (error) {
-    //     console.error('Error commenting on post: ', error.message);
-    //     throw error;
-    // }
 
     // add the comment in the comments array
     const { data, error } = await supabase

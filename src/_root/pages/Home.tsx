@@ -1,72 +1,48 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import React from "react";
-import { useInView } from "react-intersection-observer";
 
-import { Input } from "@/components/ui";
-import useDebounce from "@/hooks/useDebounce";
-import { GridPostList, Loader, PostCard, Topbar } from "@/components/shared";
-import { useGetPosts, useSearchPosts } from "@/lib/react-query/queries";
 import TopHeader from "@/components/shared/TopHeader";
 import CreatePost from "@/components/shared/CreatePost";
-import { sort_filters, postTags } from "@/constants";
-import PostDetails from "./PostDetails";
-import Posts from "@/components/shared/Posts";
 
-import { Button } from "@/components/ui/button";
+import Posts from "@/components/shared/Posts";
 
 import RightSideBar from "@/components/RightSidebar";
 
-export type SearchResultProps = {
-  isSearchFetching: boolean;
-  searchedPosts: any;
-};
-
-const SearchResults = ({
-  isSearchFetching,
-  searchedPosts,
-}: SearchResultProps) => {
-  if (isSearchFetching) {
-    return <Loader />;
-  } else if (searchedPosts && searchedPosts.documents.length > 0) {
-    return <GridPostList posts={searchedPosts.documents} />;
-  } else {
-    return (
-      <p className="text-light-4 mt-10 text-center w-full">No results found</p>
-    );
-  }
-};
-
 const Home = () => {
-  // const { ref, inView } = useInView();
-  // const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
-
-  // const [searchValue, setSearchValue] = useState("");
-  // const debouncedSearch = useDebounce(searchValue, 500);
-  // const { data: searchedPosts, isFetching: isSearchFetching } =
-  //   useSearchPosts(debouncedSearch);
-
-  // useEffect(() => {
-  //   if (inView && !searchValue) {
-  //     fetchNextPage();
-  //   }
-  // }, [inView, searchValue]);
-
-  // if (!posts)
-  //   return (
-  //     <div className="flex-center w-full h-full">
-  //       <Loader />
-  //     </div>
-  //   );
-
-  // const shouldShowSearchResults = searchValue !== "";
-  // const shouldShowPosts =
-  //   !shouldShowSearchResults &&
-  //   posts.pages.every((item) => item.documents.length === 0);\
-
   const [postCount, setPostCount] = useState(0);
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const leftColRef = React.useRef(null);
+
+  const scrollToTop = () => {
+    if (leftColRef.current) {
+      leftColRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleScroll = () => {
+    if (leftColRef.current) {
+      const scrollTop = leftColRef.current.scrollTop;
+      setIsScrolled(scrollTop > 0);
+    }
+  };
 
   const handlePostCreated = React.useCallback(() => {
     setPostCount((prev) => prev + 1);
+  }, []);
+
+  React.useEffect(() => {
+    const leftColElement = leftColRef.current;
+    if (leftColElement) {
+      leftColElement.addEventListener("scroll", handleScroll);
+      // Initial check
+      handleScroll();
+    }
+    return () => {
+      if (leftColElement) {
+        leftColElement.removeEventListener("scroll", handleScroll);
+      }
+    };
   }, []);
 
   return (
@@ -76,16 +52,24 @@ const Home = () => {
 
       <div className=" explore_content_wrap">
         {/* left_wide_col start*/}
-        <div className="left_wide_col">
+        <div className="left_wide_col" ref={leftColRef}>
           <CreatePost onPostCreated={handlePostCreated} />
           <div className="">
             <Posts key={postCount} />
           </div>
+          {isScrolled && (
+            <button
+              onClick={scrollToTop}
+              className="fixed text-sm font-medium bottom-20 lg:bottom-10 right-4 lg:right-[27%] z-50 p-3 rounded-2xl text-[#000] bg-[#64D25F] shadow-xl shadow-black ">
+              POST
+            </button>
+          )}
         </div>
         {/* left_wide_col end*/}
 
         {/* right_col */}
         <RightSideBar />
+        {/* Scroll to Top Button */}
       </div>
     </div>
   );
