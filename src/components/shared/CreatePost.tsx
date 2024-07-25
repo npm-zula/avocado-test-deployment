@@ -135,8 +135,8 @@ const CreatePost = ({ onPostCreated }: any) => {
           <Loader />
         </div>
       ) : (
-        <div className="flex-grow ">
-          <div className="w-full mb-6 gap-4 flex items-center rounded-3xl bg-[var(--light-bg)]">
+        <div className="flex-grow w-full">
+          <div className="w-full mb-6 gap-4 flex items-center flex-wrap rounded-3xl bg-[var(--light-bg)]">
             <input
               className="post_input"
               type="text"
@@ -146,11 +146,11 @@ const CreatePost = ({ onPostCreated }: any) => {
               }
               placeholder="What idea do you have? "
             />
-            <div>
+            <div className="ms-auto">
               {/* post button */}
               <button
                 onClick={createNewPost}
-                className=" px-5 py-3 font-bold rounded-2xl text-[#000] bg-[#64D25F]  flex items-center justify-center ">
+                className=" px-5 py-3 font-bold rounded-2xl text-[#000] bg-[#64D25F]   flex items-center justify-center ">
                 POST
               </button>
             </div>
@@ -227,6 +227,7 @@ const CreatePost = ({ onPostCreated }: any) => {
               id="fileInput"
               type="file"
               onChange={fileUpload}
+              className="appearance-none hidden"
               style={{ visibility: "hidden" }}
             />
 

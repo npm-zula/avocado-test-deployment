@@ -31,7 +31,7 @@ const LeftSidebar = () => {
           to="/"
           className="flex gap-1 items-center text-[18px] font-semibold">
           <img
-            src="/assets/images/Logo.svg"
+            src="/assets/images/logo.svg"
             alt="logo"
             width={40}
             height={20}

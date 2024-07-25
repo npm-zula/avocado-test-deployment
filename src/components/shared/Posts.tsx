@@ -143,7 +143,7 @@ const Posts = () => {
   // }, [pageParam]);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="post_category_wrap mt-6 my-3">
         {filters?.map((item, index) => {
           return (
@@ -184,7 +184,7 @@ const Posts = () => {
         <div className="w-[140px]">
           <button
             onClick={() => setSeeAllTags(!seeAllTags)}
-            className="text-[#97999A] hover:text-[#97999A]/80 transition-all flex items-center">
+            className="text-[#97999A] hover:text-[#97999A]/80 transition-all flex items-center whitespace-nowrap">
             See More{" "}
             <span className="mx-2">
               <IoIosArrowUp

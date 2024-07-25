@@ -16,7 +16,7 @@ import { PiAvocado } from "react-icons/pi";
 
 const TopHeader = () => {
   return (
-    <div className="top-header-wrap">
+    <div className="top-header-wrap ">
       {/* <div className="text-[#DFDFE0] hidden sm:block">
         <p className="text-[10px] sm:text-[14px]  ">Saturday, November 18</p>
         <p className="text-[14px] sm:text-[18px]">

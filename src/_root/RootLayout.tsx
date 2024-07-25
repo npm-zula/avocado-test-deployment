@@ -6,11 +6,11 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 
 const RootLayout = () => {
   return (
-    <div className="w-[100vw] overflow-x-hidden md:flex">
+    <div className="w-[100vw] h-[100vh] overflow-hidden md:flex">
       <Topbar />
       <LeftSidebar />
 
-      <section className="flex overflow-x-hidden w-[100%] h-full">
+      <section className="flex overflow-x-hidden overflow-y-auto w-[100%] h-[90%] sm:h-[100%]">
         <Outlet />
       </section>
 

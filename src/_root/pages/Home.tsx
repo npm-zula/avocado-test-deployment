@@ -70,11 +70,11 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="explore-container w-[100%] h-[100vh] ">
+    <div className="explore-container  w-[100%]  h-[100%] ">
       {/* top Header */}
       <TopHeader />
 
-      <div className=" explore_content_wrap   ">
+      <div className=" explore_content_wrap">
         {/* left_wide_col start*/}
         <div className="left_wide_col">
           <CreatePost onPostCreated={handlePostCreated} />

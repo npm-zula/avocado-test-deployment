@@ -69,17 +69,21 @@ const Card = (post: CardProps) => {
   const icons = [
     <div
       onClick={handleUpvote}
-      className={`${upvoted ? "text-slate-400" : ""}`}>
-      <BiSolidUpvote size={25} />
+      className={`${
+        upvoted ? "text-slate-400" : ""
+      } md:text-[20px] text-[18px]`}>
+      <BiSolidUpvote />
     </div>,
     <div
       onClick={handleDownvote}
-      className={`${downvoted ? "text-slate-400" : ""}`}>
-      <BiSolidDownvote size={25} />
+      className={`${
+        downvoted ? "text-slate-400" : ""
+      } md:text-[20px] text-[18px]`}>
+      <BiSolidDownvote />
     </div>,
-    <FiMessageCircle size={25} />,
-    <FiSend size={25} />,
-    <FiBookmark size={25} />,
+    <FiMessageCircle className="md:text-[20px] text-[18px]" />,
+    <FiSend className="md:text-[20px] text-[18px]" />,
+    <FiBookmark className="md:text-[20px] text-[18px]" />,
   ];
 
   // timestamp
@@ -315,9 +319,9 @@ const Card = (post: CardProps) => {
               commentsList?.map((item: any, index: number) => {
                 return (
                   <div key={index} className="flex mt-1 ">
-                    <p className="w-[300px] lg:w-full sm:text-base text-sm font-semibold text-[#DFDFE0] ">
+                    <p className="w-[300px] lg:w-full sm:text-base text-xs font-medium text-[#DFDFE0] ">
                       {item?.user.username}
-                      <span className="text-white ml-2">{item?.text}</span>
+                      <span className="text-white ml-2 ">{item?.text}</span>
                     </p>
                     {/* <img
                       width={18}
@@ -330,11 +334,11 @@ const Card = (post: CardProps) => {
                 );
               })}
             <div className="flex items-center w-full h-[50px] bg-[var(--dark-bg)] rounded-lg px-2 gap-2 mt-3">
-              <div className="border-4 border-[#27272A] rounded-xl w-[40px] h-[40px]">
+              <div className="border-4 border-[#27272A] rounded-xl w-[40px] h-[40px] overflow-hidden">
                 <img
                   width={32}
                   height={32}
-                  src="/assets/explorer/profileimg2.svg"
+                  src="/assets/images/images.jpg"
                   style={{ objectFit: "cover" }}
                 />
               </div>
